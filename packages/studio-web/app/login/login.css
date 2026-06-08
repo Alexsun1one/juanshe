@@ -1,0 +1,563 @@
+/* 登录页 · 全屏(scoped .cj-login),复用设计令牌 + 暗夜模式 */
+
+.cj-login {
+  min-height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.95fr) minmax(330px, 0.72fr);
+  font-family: var(--font-pixel-ui);  /* 登录页 UI 默认像素 */
+  background: var(--bg-app);
+  color: var(--ink-800);
+}
+/* 长叙事文案保宋体(像读一段书卷开场),文本输入保 sans 可读;激活码(.mono)走 --font-num 像素 */
+.cj-login .story p, .cj-login .story .promise { font-family: var(--font-serif-prose); }
+.cj-login .card .inp { font-family: var(--font-sans-ui); }
+
+/* 左侧品牌 hero */
+.cj-login .aside {
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  padding: clamp(24px, 3vw, 40px) clamp(28px, 3.4vw, 48px);
+  display: flex; flex-direction: column;
+  background:
+    linear-gradient(160deg, color-mix(in oklab, var(--brand-500) 6%, var(--bg-canvas)) 0%, var(--bg-app) 100%);
+  color: var(--ink-800);
+  border-right: 1px solid var(--line-1);
+}
+.cj-login .aside::before,
+.cj-login .aside::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+.cj-login .aside::before {
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 27px, color-mix(in oklab, var(--brand-500) 5%, transparent) 28px 29px),
+    repeating-linear-gradient(90deg, transparent 0 27px, color-mix(in oklab, var(--brand-500) 4%, transparent) 28px 29px);
+  opacity: 0.28;
+}
+.cj-login .aside::after {
+  right: -28px;
+  bottom: 28px;
+  width: 170px;
+  height: 170px;
+  background: url("/brand/props/silicoville-mini.webp") center / contain no-repeat;
+  opacity: 0.18;
+  animation: login-town-breathe 4.8s ease-in-out infinite;
+}
+@keyframes login-town-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.14; }
+  50% { transform: scale(1.05); opacity: 0.24; }
+}
+
+.cj-login .aside-brand { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
+.cj-login .aside-brand .mk { width: 40px; height: 40px; border-radius: 11px; background: var(--brand-50); color: var(--brand-600); display: grid; place-items: center; border: 1px solid var(--line-1); }
+.cj-login .aside-brand .nm { font-size: 18px; font-weight: 700; letter-spacing: 0.02em; }
+.cj-login .login-office-scene {
+  position: relative;
+  z-index: 1;
+  margin: clamp(14px, 2vh, 20px) 0 clamp(14px, 2vh, 22px);
+  width: min(100%, 720px);
+  aspect-ratio: 16 / 9;
+  border: 1px solid color-mix(in oklab, var(--brand-500) 18%, var(--line-1));
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    radial-gradient(460px 210px at 38% 42%, color-mix(in oklab, var(--accent-gold, #FFD66A) 11%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in oklab, var(--pixel-paper, #FFFAF0) 82%, var(--bg-card)), var(--bg-card));
+  box-shadow: 0 18px 42px -28px rgba(74, 58, 36, 0.42);
+  height: auto;
+  min-height: 0;
+}
+.cj-login .login-office-scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(90deg, transparent 0 62%, color-mix(in oklab, var(--brand-500) 8%, var(--bg-card)) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.03));
+  pointer-events: none;
+}
+.cj-login .login-office-scene img {
+  display: block;
+}
+.cj-login .login-office-scene picture,
+.cj-login .login-office-scene picture > img {
+  width: 100%;
+  height: 100%;
+}
+.cj-login .login-office-scene picture > img {
+  object-fit: contain;
+  object-position: center center;
+}
+.cj-login .scene-lamp-glow {
+  position: absolute;
+  z-index: 3;
+  right: 17%;
+  top: 23%;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--accent-gold, #FFD66A) 66%, var(--brand-500));
+  filter: blur(8px);
+  opacity: 0.32;
+  animation: login-light-breathe 3.8s ease-in-out infinite;
+}
+.cj-login .scene-prop {
+  position: absolute;
+  z-index: 4;
+  width: 58px;
+  height: auto;
+  object-fit: contain;
+  filter: var(--brand-asset-filter, saturate(1)) drop-shadow(0 8px 14px rgba(74, 58, 36, 0.16));
+}
+.cj-login .scene-prop-book {
+  right: 18px;
+  bottom: 14px;
+  transform: rotate(-8deg);
+}
+.cj-login .scene-prop-plant {
+  right: 76px;
+  bottom: 0;
+  transform-origin: 50% 100%;
+  animation: login-leaf-sway 5.4s ease-in-out infinite;
+}
+.cj-login .scene-prop-typewriter {
+  left: 16px;
+  bottom: 10px;
+  width: 72px;
+  transform: rotate(-3deg);
+}
+.cj-login .scene-prop-cat {
+  right: 126px;
+  bottom: 5px;
+  width: 64px;
+  transform-origin: 50% 95%;
+  animation: login-cat-purr 3.4s ease-in-out infinite;
+}
+@keyframes login-light-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.22; }
+  50% { transform: scale(1.18); opacity: 0.4; }
+}
+@keyframes login-leaf-sway {
+  0%, 100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(2deg) translateY(-2px); }
+}
+@keyframes login-cat-purr {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-1px) scale(1.018, 0.988); }
+}
+.cj-login .aside-hero { margin-top: auto; position: relative; z-index: 1; }
+.cj-login .aside-hero h1 { font-size: 38px; line-height: 1.25; font-weight: 800; margin: 0 0 16px; letter-spacing: -0.01em; }
+.cj-login .aside-hero h1 .grad { background: linear-gradient(90deg, #C8BDFF, #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cj-login .aside-hero p { font-size: 14.5px; line-height: 1.7; color: rgba(255,255,255,0.72); max-width: 420px; margin: 0; }
+.cj-login .feat { margin-top: 28px; display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; }
+.cj-login .feat .fi { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: rgba(255,255,255,0.86); }
+.cj-login .feat .fi .ic { width: 26px; height: 26px; border-radius: 8px; background: rgba(255,255,255,0.12); display: grid; place-items: center; flex: 0 0 26px; color: #C8BDFF; }
+.cj-login .aside-foot { margin-top: 36px; font-size: 12px; color: rgba(255,255,255,0.5); position: relative; z-index: 1; }
+
+/* 右侧表单 */
+.cj-login .main { display: flex; align-items: center; justify-content: center; padding: 40px; }
+.cj-login .form-wrap { width: 100%; max-width: 380px; animation: cj-fade-in var(--motion-slow) var(--ease-out-cj); }
+.cj-login .welcome { font-size: 26px; font-weight: 800; color: var(--ink-900); letter-spacing: -0.01em; }
+.cj-login .welcome-sub { font-size: 13.5px; color: var(--ink-500); margin-top: 8px; }
+.cj-login .form { margin-top: 28px; display: flex; flex-direction: column; gap: 16px; }
+.cj-login .field { display: flex; flex-direction: column; gap: 7px; }
+.cj-login .field label { font-size: 12.5px; color: var(--ink-600); font-weight: 500; }
+.cj-login .input-wrap { position: relative; display: flex; align-items: center; }
+.cj-login .input-wrap .lead { position: absolute; left: 12px; color: var(--ink-400); display: grid; place-items: center; }
+.cj-login .input-wrap input {
+  width: 100%; height: 44px; padding: 0 12px 0 38px;
+  border: 1px solid var(--line-2); border-radius: var(--r-md);
+  background: var(--bg-card); color: var(--ink-900); font-size: 14px;
+  transition: border-color var(--motion-fast) var(--ease-soft), box-shadow var(--motion-fast) var(--ease-soft);
+}
+.cj-login .input-wrap input::placeholder { color: var(--ink-300); }
+.cj-login .input-wrap input:focus-visible { outline: none; border-color: var(--brand-400, var(--brand-300)); box-shadow: var(--ring); }
+.cj-login .input-wrap .eye { position: absolute; right: 8px; width: 30px; height: 30px; display: grid; place-items: center; color: var(--ink-400); border-radius: var(--r-sm); cursor: pointer; }
+.cj-login .input-wrap .eye:hover { background: var(--bg-hover); color: var(--brand-600); }
+.cj-login .row-between { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; }
+.cj-login .remember { display: inline-flex; align-items: center; gap: 7px; color: var(--ink-600); cursor: pointer; user-select: none; }
+.cj-login .remember .box { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--line-3); display: grid; place-items: center; transition: all var(--motion-fast) var(--ease-soft); }
+.cj-login .remember .box.on { background: var(--brand-500); border-color: var(--brand-500); color: #fff; }
+.cj-login .link { color: var(--brand-600); cursor: pointer; }
+.cj-login .link:hover { text-decoration: underline; }
+.cj-login .submit { width: 100%; justify-content: center; height: 46px; font-size: 14px; margin-top: 4px; }
+.cj-login .divider-or { display: flex; align-items: center; gap: 12px; color: var(--ink-400); font-size: 12px; margin: 6px 0; }
+.cj-login .divider-or::before, .cj-login .divider-or::after { content: ""; flex: 1; height: 1px; background: var(--line-1); }
+.cj-login .ghost-enter { width: 100%; justify-content: center; height: 44px; }
+.cj-login .login-foot { margin-top: 26px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-500); }
+.cj-login .login-foot .env-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok-500); box-shadow: 0 0 0 3px rgba(29,185,122,0.18); }
+
+/* ════ v2:背景故事 + 编辑部主视觉 + 进入卡(作者名 + 激活码)════ */
+.cj-login .aside { padding: clamp(24px, 3vw, 40px) clamp(28px, 3.4vw, 48px); }
+.cj-login .story { margin-top: 0; position: relative; z-index: 1; max-width: 650px; }
+.cj-login .story h1 { font-size: clamp(22px, 2.1vw, 27px); line-height: 1.3; font-weight: 800; margin: 0 0 10px; letter-spacing: 0; color: var(--ink-900); }
+.cj-login .story h1 .grad { background: linear-gradient(90deg, var(--brand-500), var(--brand-700)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cj-login .story p { font-size: 12.8px; line-height: 1.68; color: var(--ink-600); margin: 0 0 7px; }
+.cj-login .story p b { color: var(--ink-900); font-weight: 700; }
+.cj-login .story .slogan { font-size: 16.5px; font-weight: 800; letter-spacing: 0.04em; color: var(--accent-warm-deep); margin: 9px 0; text-shadow: none; }
+
+/* 硅基小镇背景 —— 「by the way」式旁白,顶部虚线分隔,略小略淡 */
+.cj-login .story .lore {
+  margin-top: 10px; padding-top: 9px;
+  border-top: 1px dashed var(--line-2, var(--line-1));
+  font-size: 12px; line-height: 1.62; color: var(--ink-500);
+}
+/* 硅基小镇 —— 通往另一座宇宙的入口:品牌渐变 + 像素体 */
+.cj-login .silicon {
+  font-family: var(--font-pixel-ui); font-weight: 700; letter-spacing: 0.02em;
+  background: linear-gradient(90deg, var(--brand-500), var(--brand-700));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.cj-login .silicoville-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  margin-left: 7px;
+  padding: 2px 9px 3px;
+  color: var(--brand-700);
+  font-family: var(--font-pixel-ui);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  vertical-align: baseline;
+  border: 1px solid color-mix(in oklab, var(--brand-500) 22%, var(--line-1));
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--brand-500) 7%, var(--bg-card));
+  box-shadow: 0 2px 0 color-mix(in oklab, var(--brand-500) 10%, transparent);
+  transition: transform .16s var(--ease-spring-cj, ease), border-color .16s ease, background .16s ease;
+}
+.cj-login .silicoville-link:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in oklab, var(--brand-500) 36%, var(--line-1));
+  background: color-mix(in oklab, var(--brand-500) 11%, var(--bg-card));
+}
+
+/* 「卷」字 —— 品牌之魂:像素体 + 品牌紫 + 加大,从暖灰正文里跳出来 */
+.cj-login .juan {
+  font-family: var(--font-pixel-ui);
+  color: var(--brand-600);
+  font-weight: 700;
+  font-size: 1.16em;
+  letter-spacing: 0.02em;
+  display: inline-block;
+}
+/* 口号里的卷:更大一档 + 像素描边阴影 + 错峰轻跳(卷的劲) */
+.cj-login .slogan .juan {
+  font-size: calc(1.5em + var(--i, 0) * 0.09em);
+  line-height: 1;
+  margin: 0 0.012em;
+  text-shadow: 2px 2px 0 color-mix(in oklab, var(--brand-500) 22%, transparent);
+  animation: juan-bob 1.9s var(--ease-soft, ease-in-out) infinite;
+  animation-delay: calc(var(--i, 0) * 0.11s);
+}
+@keyframes juan-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-0.11em); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cj-login .slogan .juan { animation: none; }
+}
+.cj-login .story .promise { color: var(--ink-700); }
+.cj-login .panel { display: flex; align-items: center; justify-content: center; padding: clamp(24px, 3vw, 40px); min-height: 0; }
+.cj-login .card { width: 100%; max-width: 372px; max-height: calc(100dvh - 44px); overflow-y: auto; background: var(--bg-card); border: 1px solid var(--line-1); border-radius: 15px; padding: 20px 22px; box-shadow: var(--sh-3); animation: cj-fade-in var(--motion-slow, .36s) var(--ease-out-cj, ease); scrollbar-width: thin; }
+.cj-login .card-emblem { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-50); color: var(--brand-600); display: grid; place-items: center; margin-bottom: 14px; }
+.cj-login .card h2 { font-size: 22px; font-weight: 800; color: var(--ink-900); margin: 0; }
+.cj-login .card-sub { font-size: 13px; color: var(--ink-500); margin: 6px 0 22px; line-height: 1.6; }
+.cj-login .card .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.cj-login .card .lab { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; color: var(--ink-700); }
+.cj-login .card .inp { height: 40px; border: 1px solid var(--line-2); border-radius: var(--r-md); background: var(--bg-canvas); padding: 0 13px; font-size: 14px; color: var(--ink-900); transition: border-color .15s, box-shadow .15s; }
+.cj-login .card .inp.mono { font-family: var(--font-num); letter-spacing: 0.08em; }
+.cj-login .card .inp::placeholder { color: var(--ink-300); }
+.cj-login .card .inp:focus-visible { outline: none; border-color: var(--brand-400, var(--brand-500)); box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-500) 18%, transparent); }
+.cj-login .card .hint { font-size: 11px; color: var(--ink-400); line-height: 1.5; }
+.cj-login .card .enter { width: 100%; height: 46px; margin-top: 6px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 14.5px; font-weight: 700; color: #fff; background: linear-gradient(180deg, var(--brand-500), var(--brand-600)); border: none; border-radius: var(--r-lg); cursor: pointer; transition: transform .15s, box-shadow .15s, opacity .15s; box-shadow: 0 6px 18px rgba(110, 91, 250, 0.28); }
+.cj-login .card .enter:hover { transform: translateY(-1.5px); box-shadow: 0 10px 24px rgba(110, 91, 250, 0.34); }
+.cj-login .card .enter:active { transform: translateY(0) scale(0.98); }
+.cj-login .card .enter:disabled { opacity: .6; cursor: default; }
+.cj-login .card .foot-note { font-size: 11px; color: var(--ink-400); text-align: center; margin: 16px 0 0; }
+.cj-login .login-err {
+  display: flex; align-items: center; gap: 7px;
+  margin: 0 0 12px; padding: 9px 12px;
+  font-size: 12.5px; line-height: 1.45; font-weight: 500;
+  color: var(--rose-700, #b4233a);
+  background: var(--rose-50, color-mix(in oklab, #e5484d 9%, var(--bg-card)));
+  border: 1px solid var(--rose-200, color-mix(in oklab, #e5484d 26%, var(--line-1)));
+  border-radius: var(--r-md);
+  animation: cj-fade-in var(--motion-fast, .15s) var(--ease-out-cj, ease);
+}
+.cj-login .login-err svg { flex: 0 0 auto; }
+
+/* 公众号领码引导:没填激活码时出现,微信搜一搜/扫码横条 + 引导文案 */
+.cj-login .code-claim {
+  display: flex; flex-direction: column; gap: 7px;
+  margin: 0 0 12px; padding: 9px;
+  background: color-mix(in oklab, var(--brand-500) 5%, var(--bg-canvas));
+  border: 1px solid color-mix(in oklab, var(--brand-500) 18%, var(--line-1));
+  border-radius: var(--r-lg);
+  animation: cj-fade-in var(--motion, .2s) var(--ease-out-cj, ease);
+}
+.cj-login .cc-title { font-size: 12.5px; font-weight: 700; color: var(--brand-700, var(--brand-600)); }
+.cj-login .cc-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 112px;
+  object-fit: contain;
+  object-position: center;
+  border-radius: var(--r-md);
+  background: #fff;
+  border: 1px solid var(--line-1);
+}
+.cj-login .cc-banner-fallback {
+  display: grid; place-items: center; gap: 3px; width: 100%; min-height: 92px; padding: 14px;
+  font-size: 12.5px; font-weight: 700; color: var(--ink-400); text-align: center; line-height: 1.3;
+  border-radius: var(--r-md);
+  background: repeating-linear-gradient(45deg, var(--bg-sunken), var(--bg-sunken) 7px, transparent 7px, transparent 14px);
+}
+.cj-login .cc-banner-fallback span { font-size: 10.5px; color: var(--ink-300); font-weight: 500; }
+.cj-login .cc-hint { font-size: 11.5px; line-height: 1.45; color: var(--ink-600); margin: 0; }
+.cj-login .cc-hint b { color: var(--ink-900); font-weight: 700; }
+
+/* ════ v3:编辑部图成为主视觉,文案嵌入图右侧空白区 ════ */
+.cj-login .aside {
+  padding: clamp(20px, 2.3vw, 34px);
+  justify-content: stretch;
+}
+.cj-login .aside-brand {
+  flex: 0 0 auto;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+}
+.cj-login .login-office-scene {
+  width: 100%;
+  max-width: none;
+  flex: 0 1 auto;
+  min-height: 0;
+  margin: 0;
+  align-self: center;
+  height: min(72vh, 720px);
+  border-radius: 20px;
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--bg-inverse) 45%, transparent) inset,
+    0 26px 70px -36px rgba(74, 58, 36, 0.56);
+}
+.cj-login .login-office-scene::before {
+  background:
+    linear-gradient(90deg, transparent 0 38%, rgba(255, 239, 198, 0.34) 58%, rgba(255, 245, 218, 0.88) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.025));
+}
+.cj-login .login-office-scene::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 78% 45%, rgba(255, 232, 166, 0.34), transparent 30%),
+    linear-gradient(90deg, transparent 0 48%, rgba(255, 247, 225, 0.48) 72%, rgba(255, 250, 235, 0.94) 100%);
+  animation: login-mask-breathe 5.6s ease-in-out infinite;
+}
+.cj-login .login-office-scene picture > img {
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(0.98) contrast(0.98);
+}
+.cj-login .scene-lamp-glow {
+  right: 9%;
+  top: 41%;
+  width: 42px;
+  height: 42px;
+  opacity: 0.24;
+}
+.cj-login .story {
+  position: absolute;
+  z-index: 6;
+  right: clamp(24px, 3.2vw, 52px);
+  top: clamp(74px, 12vh, 128px);
+  bottom: clamp(42px, 7vh, 82px);
+  width: min(28vw, 360px);
+  max-width: 31%;
+  margin: 0;
+  padding: clamp(16px, 1.7vw, 24px) clamp(16px, 1.8vw, 24px) clamp(14px, 1.5vw, 20px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #4A3828;
+  border: 1px solid rgba(133, 93, 46, 0.14);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 249, 235, 0.72), rgba(255, 241, 212, 0.54)),
+    rgba(255, 246, 224, 0.62);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.74) inset,
+    0 18px 34px -28px rgba(74, 45, 18, 0.48);
+  backdrop-filter: blur(2px);
+}
+.cj-login .story h1 {
+  font-size: clamp(20px, 1.55vw, 27px);
+  line-height: 1.24;
+  margin: 0 0 10px;
+  color: #38291E;
+  text-shadow: 0 1px 0 rgba(255, 246, 222, 0.8);
+}
+.cj-login .story h1 .grad,
+.cj-login .silicon {
+  background: linear-gradient(90deg, #6B54D8, #8B5DDA);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cj-login .story .slogan {
+  margin: 0 0 11px;
+  font-size: clamp(12.5px, 0.94vw, 15px);
+  line-height: 1.45;
+  color: #B45E23;
+  letter-spacing: 0;
+}
+.cj-login .story .typewriter-copy {
+  white-space: pre-wrap;
+  font-family: var(--font-serif-prose);
+  font-size: clamp(12.5px, 0.84vw, 14px);
+  line-height: 1.64;
+  color: #5E4A38;
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255, 246, 222, 0.62);
+}
+.cj-login .story-tone {
+  font-family: var(--font-pixel-ui);
+  font-weight: 700;
+}
+.cj-login .story-tone-silicon {
+  color: #6B54D8;
+  text-shadow: 0 1px 0 rgba(255, 246, 222, 0.74);
+}
+.cj-login .story-tone-agents {
+  color: #A85727;
+}
+.cj-login .story-tone-seal {
+  color: #B34E3F;
+  background: rgba(255, 228, 196, 0.58);
+  padding: 0 2px;
+  border-radius: 4px;
+}
+.cj-login .story-tone-author {
+  color: #3E7660;
+  background: rgba(214, 241, 222, 0.48);
+  padding: 0 2px;
+  border-radius: 4px;
+}
+.cj-login .story-scroll {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  margin-right: -6px;
+  mask-image: linear-gradient(180deg, #000 0, #000 calc(100% - 22px), transparent 100%);
+}
+.cj-login .typewriter-cursor {
+  display: inline-block;
+  width: 0.56em;
+  height: 1.12em;
+  margin-left: 2px;
+  vertical-align: -0.16em;
+  border-right: 2px solid #6B54D8;
+  animation: login-cursor-blink 0.82s steps(1, end) infinite;
+}
+.cj-login .token-nudge {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 1;
+  width: min(100%, 760px);
+  margin: 12px auto 0;
+  padding: 8px 12px;
+  border: 1px dashed rgba(168, 102, 42, 0.28);
+  border-radius: 12px;
+  background: rgba(255, 246, 225, 0.52);
+  color: #6D5540;
+  font-family: var(--font-serif-prose);
+  font-size: clamp(11.5px, 0.76vw, 12.5px);
+  line-height: 1.5;
+}
+.cj-login .token-nudge span {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 7px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(107, 84, 216, 0.1);
+  color: #6B54D8;
+  font-family: var(--font-pixel-ui);
+  font-size: 10px;
+  font-weight: 700;
+  vertical-align: 1px;
+}
+@keyframes login-cursor-blink {
+  0%, 48% { opacity: 1; }
+  49%, 100% { opacity: 0; }
+}
+@keyframes login-mask-breathe {
+  0%, 100% { opacity: 0.78; }
+  50% { opacity: 0.96; }
+}
+.cj-login .silicoville-link {
+  margin: 14px 0 0;
+  min-height: 30px;
+  padding: 4px 12px 5px;
+  flex: 0 0 auto;
+  background: rgba(255, 246, 225, 0.66);
+  border-color: rgba(107, 84, 216, 0.26);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.76) inset,
+    0 8px 18px -14px rgba(72, 47, 150, 0.68);
+}
+.cj-login .panel {
+  padding: clamp(22px, 2.2vw, 34px) clamp(26px, 3vw, 46px);
+  background:
+    linear-gradient(90deg, color-mix(in oklab, var(--bg-app) 72%, transparent), var(--bg-app) 22%),
+    var(--bg-app);
+}
+.cj-login .card {
+  max-width: 336px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--bg-inverse) 44%, transparent) inset,
+    0 22px 54px -38px rgba(74, 58, 36, 0.58);
+}
+.cj-login .card-emblem {
+  width: 38px;
+  height: 38px;
+  margin-bottom: 12px;
+}
+.cj-login .card h2 { font-size: 20px; }
+.cj-login .card-sub { margin-bottom: 16px; }
+.cj-login .card .field { margin-bottom: 10px; }
+.cj-login .card .inp { height: 38px; }
+.cj-login .code-claim { padding: 8px; }
+.cj-login .cc-banner { max-height: 92px; }
+
+@media (max-width: 880px) {
+  .cj-login { grid-template-columns: 1fr; height: auto; min-height: 100dvh; overflow: visible; }
+  .cj-login .aside { padding: 30px 26px; }
+  .cj-login .login-office-scene { width: 100%; height: auto; aspect-ratio: 16 / 9; margin-top: 18px; }
+  .cj-login .story h1 { font-size: 23px; }
+  .cj-login .story .promise,
+  .cj-login .story .lore { display: none; }
+  .cj-login .panel { padding: 28px; }
+  .cj-login .card { max-height: none; overflow: visible; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cj-login .aside::after,
+  .cj-login .scene-lamp-glow,
+  .cj-login .scene-prop-plant,
+  .cj-login .scene-prop-cat {
+    animation: none !important;
+  }
+}

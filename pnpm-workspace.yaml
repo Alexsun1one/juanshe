@@ -1,0 +1,13 @@
+packages:
+  - "packages/*"
+overrides:
+  '@mariozechner/pi-ai': 0.67.1
+  '@mariozechner/pi-agent-core': 0.67.1
+allowBuilds:
+  electron: true
+  esbuild: true
+  msw: true
+  protobufjs: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - '@ai-sdk/anthropic@3.0.81'

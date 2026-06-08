@@ -1,0 +1,49 @@
+node_modules/
+dist/
+.env
+.env.local
+.npmrc
+*.tgz
+.DS_Store
+coverage/
+.turbo/
+*.tsbuildinfo
+_notes/
+_tmp_*
+test-project/
+.venv*/
+.gstack/
+.worktrees/
+docs/*
+novel-to-comic-research.docx
+.pnpm-store/
+tmp/
+packages/studio-electron/.electron-resources/
+_*.md
+
+# Local runtime data
+/hardwrite.json
+/.hardwrite/
+/books/
+/prompt/
+/卷舍写作库/
+
+# Local reference docs and generated assets
+packages/studio-web/docs/
+
+# Root-level design review snapshots
+*-redesign-*.png
+*-snapshot.md
+
+# 测试产物
+test-results/
+
+# 本机运行态密钥/激活（绝不提交）
+.autow/
+**/.autow/secrets.json
+**/.autow/activation.json
+
+node_modules/
+dist/
+.next/
+*.tsbuildinfo

@@ -1,0 +1,57 @@
+卷舍引擎 · Juanshe Engine
+Copyright (C) 2026 卷舍编辑部 (Juanshe)
+
+本程序是自由软件,依据自由软件基金会发布的 GNU Affero 通用公共许可证
+（GNU AGPL）第 3 版条款再分发与/或修改。完整条款见随附的 LICENSE 文件。
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License v3.0 as published
+by the Free Software Foundation. See the LICENSE file for the full text.
+
+
+════════════════════════════════════════════════════════════════════
+上游致谢 · Upstream Attribution
+════════════════════════════════════════════════════════════════════
+
+卷舍引擎的多 Agent 写作管线与 "truth files"（真相文件）连续性架构
+衍生自以下上游项目，特此致谢：
+
+This work is derived from, and gratefully acknowledges, the following
+upstream project:
+
+    InkOS — Autonomous novel-writing AI Agent
+    Author:     Narcooo
+    Repository: https://github.com/Narcooo/inkos
+    License:    GNU AGPL-3.0-only
+
+InkOS 开创了 Radar → Planner → Composer → Architect → Writer → Observer
+→ Auditor → Reviser 的自主写作 Agent 管线，以及独立于 LLM 生成、用于长篇
+连续性管控的 "truth files" 架构。卷舍引擎在此基础之上继续开发。
+
+InkOS pioneered the autonomous writing-agent pipeline (Radar → Planner →
+Composer → Architect → Writer → Observer → Auditor → Reviser) and the
+"truth files" architecture for long-form continuity. Juanshe Engine builds
+upon that foundation.
+
+
+════════════════════════════════════════════════════════════════════
+卷舍引擎相对上游的主要改动 · Notable changes by Juanshe
+════════════════════════════════════════════════════════════════════
+
+依据 AGPL-3.0 第 5 条，标注本衍生作品对上游的显著修改：
+Per AGPL-3.0 §5, significant modifications in this derivative work include:
+
+  - 主设定保真锚点：把作品命题 (brief) 贯通注入写手与规划 Agent，
+    抑制长篇连续写作中的题材/人设漂移
+    (premise-fidelity anchor threaded into writer/planner to curb
+     genre/character drift over long runs)
+  - 章节级抗漂移审计纠偏回写 (audit-drift guidance fed forward per chapter)
+  - 架构师逐段化建基，避免弱模型/长输出的失控与截断
+    (section-by-section foundation generation)
+  - OpenAI 兼容服务的消息扁平化修复（system 消息缓存标记数组内容）
+    (OpenAI-compatible message-flattening fix)
+  - 本地模型 (MLX / Ollama) 写作链路适配
+    (local-model writing pipeline support)
+  - 简体中文产品化、像素风「编辑部」交互层、质量门禁与审批态等
+
+完整改动以 Git 历史为准。Full change history is in the Git log.
